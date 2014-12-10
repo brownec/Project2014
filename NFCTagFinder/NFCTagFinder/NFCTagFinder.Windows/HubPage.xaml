@@ -56,7 +56,7 @@
                     <TextBlock x:Name="pageTitle" x:Uid="Header" Text="NFC Tag Finder" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" IsHitTestVisible="false" TextWrapping="NoWrap" Height="85" VerticalAlignment="Top" SelectionChanged="pageTitle_SelectionChanged" Margin="0,0,-175,-44" />
                 </Grid>
             </Hub.Header>
-            <HubSection Width="780" Margin="0,0,80,0">
+            <HubSection Width="780">
                 <HubSection.Background>
                     <ImageBrush ImageSource="Assets/MediumGray.png" Stretch="UniformToFill" />
                 </HubSection.Background>
@@ -149,5 +149,9 @@
             </HubSection>
         </Hub>
         <TextBlock HorizontalAlignment="Left" Margin="60,160,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="80" Width="575"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="66,242,0,0" VerticalAlignment="Top" Width="581" Height="86"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="80" Margin="66,348,0,0" VerticalAlignment="Top" Width="581"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="88" Margin="66,447,0,0" VerticalAlignment="Top" Width="575"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="85" Margin="66,557,0,0" VerticalAlignment="Top" Width="572"/>
     </Grid>
 </Page>
