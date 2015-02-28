@@ -22,10 +22,11 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "NFCs")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Locate Tag", "Locate Tag", "Home")</li>
+                    <li>@Html.ActionLink("Locations", "Locations", "Home")</li>
+                    <li>@Html.ActionLink("Directions", "Directions", "Home")</li>
                 </ul>
-                @Html.Partial("_LoginPartial")
+                @*@Html.Partial("_LoginPartial")*@
             </div>
         </div>
     </div>
@@ -33,7 +34,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year | Cliff Browne | NFC Tag Locator</p>
+            <p>&copy; @DateTime.Now.Year | Cliff Browne | NFC Tag Locator | Site Map</p>
         </footer>
     </div>
 
