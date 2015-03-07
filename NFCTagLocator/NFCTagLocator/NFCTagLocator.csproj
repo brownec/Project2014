@@ -274,11 +274,7 @@
     <Content Include="Views\NFCs\Details.cshtml" />
     <Content Include="Views\NFCs\Edit.cshtml" />
     <Content Include="Views\NFCs\Index.cshtml" />
-    <Content Include="Views\LocateTags\Create.cshtml" />
-    <Content Include="Views\LocateTags\Delete.cshtml" />
-    <Content Include="Views\LocateTags\Details.cshtml" />
-    <Content Include="Views\LocateTags\Edit.cshtml" />
-    <Content Include="Views\LocateTags\Index.cshtml" />
+    <Content Include="Views\NFCs\LocateTag.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

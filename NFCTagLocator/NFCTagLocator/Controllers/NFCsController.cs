@@ -115,6 +115,13 @@ namespace NFCTagLocator.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult LocateTag()
+        {
+            ViewBag.Message = "LocateTag";
+
+            return View();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
