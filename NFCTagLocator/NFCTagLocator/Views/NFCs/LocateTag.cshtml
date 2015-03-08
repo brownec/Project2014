@@ -4,112 +4,79 @@
     ViewBag.Title = "LocateTag";
 }
 
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-    <title>Locate Tag</title>
+    <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <script charset="UTF-8" type="text/javascript" src="https://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0">
-    </script>
+    <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
 
     <script type="text/javascript">
 
-        // var pinInfobox = null;
+        var map = null;
 
         function GetMap() {
-            //var map = new Microsoft.Maps.Map(document.getElementById("mapDiv"), {
-            //    credentials: "AlCwJKeo1G8Dd7xSR7HJPID3lLyGL0dWRzLT4w0Hy904JTfDTXzU3D6yBv7vhUWC",
-            //    mapTypeId: Microsoft.Maps.MapTypeId.road
-            //});
-            var map = new Microsoft.Maps.Map(document.getElementById("mapDiv"),
-                           {
-                               credentials: "AlCwJKeo1G8Dd7xSR7HJPID3lLyGL0dWRzLT4w0Hy904JTfDTXzU3D6yBv7vhUWC",
-                               center: new Microsoft.Maps.Location(45.5, -122.5),
-                               mapTypeId: Microsoft.Maps.MapTypeId.road,
-                               zoom: 7,
-                               showScalebar: true
-                           });
-        }
-        //    // return location of the centre of the map
-        //    var center = map.getCenter();
+            // Initialize the map
+            map = new Microsoft.Maps.Map(document.getElementById("mapDiv"), {
+                credentials: "AlCwJKeo1G8Dd7xSR7HJPID3lLyGL0dWRzLT4w0Hy904JTfDTXzU3D6yBv7vhUWC",
+                center: new Microsoft.Maps.Location(53.27642, -6.36016),
+                mapTypeId: Microsoft.Maps.MapTypeId.road,
+                zoom: 7
+            });
 
-        //    // add a pushpin to the centre of the map with a display value of '1'
-        //    var pin = new Microsoft.Maps.Pushpin(center, { text: "1" })
 
-        //    // create the infobox for the pushpin
-        //    pinInfobox = new Microsoft.Maps.Infobox(pin.getLocation(),
-        //        {
-        //            title: 'Pushpin 1',
-        //            description: 'Pushpin 1 located at (0,0).',
-        //            visible: false,
-        //            offset: new Microsoft.Maps.Point(0, 15)
-        //        });
-
-        //    // handler for when pushpin is clicked on
-        //    Microsoft.Maps.Events.addHandler(pin, 'click', displayInfobox);
-
-        //    // hide infobox once the map is moved
-        //    Microsoft.Maps.Events.addHandler(map, 'viewchange', hideInfobox);
-
-        //    // display the pushpin and infobox on the page
-        //    map.entities.push(pin);
-        //    map.entities.push(pinInfobox);
-        //}
-
-        function displayInfobox(e)
-        {
-            pinInfobox.setOptions({visible: true})
         }
 
-        function hideInfobox(e)
-        {
-            pinInfobox.setOptions({visible: false})
-        }
+        function ClickRoute(credentials) {
 
-        function ClickRoute(credentials)
-        {
             map.getCredentials(MakeRouteRequest);
         }
 
-        function MakeRouteRequest(credentials)
-        {
-            var routeRequest = "http://dev.viretualearth.net/RESR/v1/Routes?wp.0=" + document.getElementById('txtStart').value
-            + "&wp.1=" + document.getElementById('txtEnd').value + "&routePathOutput=Points&output=json&jsonp=RouteCallback&keys"
-            + credentials;
+
+        function MakeRouteRequest(credentials) {
+            var routeRequest = "http://dev.virtualearth.net/REST/v1/Routes?wp.0=" + document.getElementById('txtStart').value + "&wp.1=" + document.getElementById('txtEnd').value + "&routePathOutput=Points&output=json&jsonp=RouteCallback&key=" + credentials;
+
             CallRestService(routeRequest);
+
         }
 
-        function RouteCallback(result)
-        {
+
+        function RouteCallback(result) {
+
+
             if (result &&
-                result.resourceSets &&
-                result.resourceSets.length > 0 &&
-                result.resourceSets[0].resources &&
-                result.resourceSets[0].resources.length > 0)
-            {
-                // set the map view
-                var bbox = result.resourceSets[0].bbox;
-                var viewBoundaries = Microsoft.Maps.LocationRect.fromLocations(new Microsoft.Maps.Location(bbox[0], bbox[1]),
-                    new Microsoft.Maps.Location(bbox[2], bbox[4]));
+                  result.resourceSets &&
+                  result.resourceSets.length > 0 &&
+                  result.resourceSets[0].resources &&
+                  result.resourceSets[0].resources.length > 0) {
+
+                // Set the map view
+                var bbox = result.resourceSets[0].resources[0].bbox;
+                var viewBoundaries = Microsoft.Maps.LocationRect.fromLocations(new Microsoft.Maps.Location(bbox[0], bbox[1]), new Microsoft.Maps.Location(bbox[2], bbox[3]));
                 map.setView({ bounds: viewBoundaries });
 
-                // draw out the route
+
+                // Draw the route
                 var routeline = result.resourceSets[0].resources[0].routePath.line;
                 var routepoints = new Array();
-                for (var i = 0; i < routeline.coordinates.length; i++)
-                {
+
+                for (var i = 0; i < routeline.coordinates.length; i++) {
+
                     routepoints[i] = new Microsoft.Maps.Location(routeline.coordinates[i][0], routeline.coordinates[i][1]);
                 }
 
-                // draw the route on the map
+
+                // Draw the route on the map
                 var routeshape = new Microsoft.Maps.Polyline(routepoints, { strokeColor: new Microsoft.Maps.Color(200, 0, 0, 200) });
                 map.entities.push(routeshape);
-                }
+
+            }
         }
 
-        function CallRestServices(request)
-        {
+
+        function CallRestService(request) {
             var script = document.createElement("script");
             script.setAttribute("type", "text/javascript");
             script.setAttribute("src", request);
@@ -117,40 +84,17 @@
         }
 
     </script>
-
 </head>
 <body onload="GetMap();">
-    @*<div id='mapDiv' style="position:absolute; width:400px; height:400px;"></div>*@
-    <div id='mapDiv' style="position:absolute; width:800px; height:450px;"></div>
+    <div id='mapDiv' style="position:relative; width:400px; height:400px;"></div>
     <input id="txtStart" type="text" value="Seattle" />
     <input id="txtEnd" type="text" value="Portland" />
     <input type="button" value="Calculate Route" onclick="ClickRoute()" />
-
 </body>
 </html>
 
-@*<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}*@
 
-</table>
+
+
+
