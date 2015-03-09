@@ -16,70 +16,59 @@
     <script type="text/javascript">
 
         var map = null;
-        var displayAlert;
 
-        function loadTrafficModule()
-        {
-            Microsoft.Maps.loadModule('Microsoft.Maps.Traffic', { callback: trafficModuleLoaded });
-        }
-        
         // Load the traffic module
-        function trafficModuleLoaded()
-        {
-            displayAlert('Traffic Module Loaded')
+        function trafficModuleLoaded() {
+            alert('Traffic Module Loaded')
         }
-        Microsoft.Maps.loadModule('Microsoft.Maps.Traffic', { callback: trafficModuleLoaded });
 
+        // ********************GET MAP CONFIGURATION********************
         function GetMap() {
             // Initialize the map
             map = new Microsoft.Maps.Map(document.getElementById("mapDiv"), {
                 credentials: "AlCwJKeo1G8Dd7xSR7HJPID3lLyGL0dWRzLT4w0Hy904JTfDTXzU3D6yBv7vhUWC",
-                center: new Microsoft.Maps.Location(53.27642, -6.36016),
                 mapTypeId: Microsoft.Maps.MapTypeId.road,
-                zoom: 7
+                zoom: 5
             });
 
-            // Load the traffic module
-            function trafficModuleLoaded() {
-                displayAlert('Traffic Module Loaded')
-            }
-            Microsoft.Maps.loadModule('Microsoft.Maps.Traffic', { callback: trafficModuleLoaded });
+            // initialise the location provider
+            var geoLocationProvider = new Microsoft.Maps.GeoLocationProvider(map);
 
+            // return users current location
+            geoLocationProvider.getCurrentPosition();
         }
-        
-        function ClickRoute(credentials)
-        {
+
+        function loadTrafficModule() {
+            Microsoft.Maps.loadModule('Microsoft.Maps.Traffic', { callback: trafficModuleLoaded });
+        }
+
+        function ClickRoute(credentials) {
             map.getCredentials(MakeRouteRequest);
         }
 
-
-        function MakeRouteRequest(credentials)
-        {
+        function MakeRouteRequest(credentials) {
             var routeRequest = "http://dev.virtualearth.net/REST/v1/Routes?wp.0=" + document.getElementById('txtStart').value + "&wp.1=" + document.getElementById('txtEnd').value + "&routePathOutput=Points&output=json&jsonp=RouteCallback&key=" + credentials;
 
             CallRestService(routeRequest);
         }
 
-        function RouteCallback(result)
-        {
+        function RouteCallback(result) {
             if (result &&
                   result.resourceSets &&
                   result.resourceSets.length > 0 &&
                   result.resourceSets[0].resources &&
-                  result.resourceSets[0].resources.length > 0)
-                {
-                 
+                  result.resourceSets[0].resources.length > 0) {
                 // Set the map view
                 var bbox = result.resourceSets[0].resources[0].bbox;
-                var viewBoundaries = Microsoft.Maps.LocationRect.fromLocations(new Microsoft.Maps.Location(bbox[0], bbox[1]), new Microsoft.Maps.Location(bbox[2], bbox[3]));
+                var viewBoundaries = Microsoft.Maps.LocationRect.fromLocations(new Microsoft.Maps.Location(bbox[0], bbox[1]),
+                    new Microsoft.Maps.Location(bbox[2], bbox[3]));
                 map.setView({ bounds: viewBoundaries });
-                
+
                 // Draw the route
                 var routeline = result.resourceSets[0].resources[0].routePath.line;
                 var routepoints = new Array();
 
-                for (var i = 0; i < routeline.coordinates.length; i++)
-                {
+                for (var i = 0; i < routeline.coordinates.length; i++) {
                     routepoints[i] = new Microsoft.Maps.Location(routeline.coordinates[i][0], routeline.coordinates[i][1]);
                 }
 
@@ -88,41 +77,36 @@
                 map.entities.push(routeshape);
             }
         }
-        
-        function CallRestService(request)
-        {
+
+        function CallRestService(request) {
             var script = document.createElement("script");
             script.setAttribute("type", "text/javascript");
             script.setAttribute("src", request);
             document.body.appendChild(script);
         }
 
-        function getCurrentLocation()
-        {
+        function getCurrentLocation() {
             var geoLocationProvider = new Microsoft.Maps.GeoLocationProvider(map);
             geoLocationProvider.getCurrentPosition({ successCallback: successCallback });
         }
 
-        function successCallback(object)
-        {
+        function successCallback(object) {
             alert('Success callback invoked, current map center ' + object.center);
         }
-
     </script>
 </head>
+
 <body onload="GetMap();">
+    <p></p>
     <div id='mapDiv' style="position:relative; width:600px; height:400px;"></div>
+
     <input id="txtStart" type="text" value="Tallaght" />
     <input id="txtEnd" type="text" value="Clondalkin" />
     <input type="button" value="Calculate Route" onclick="ClickRoute()" />
+
     <div><input type="button" value="GetCurrentLocation" onclick="getCurrentLocation();" /></div>
+
     <div><input type="button" value="LoadTrafficModule" onclick="loadTrafficModule();" /></div>
-    <div id='output'> </div> 
+    <div id='output'> </div>
 </body>
 </html>
-
-
-
-
-
-
