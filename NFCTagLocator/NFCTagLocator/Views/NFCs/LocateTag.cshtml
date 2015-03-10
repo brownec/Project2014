@@ -38,11 +38,10 @@
             geoLocationProvider.getCurrentPosition();
 
             Microsoft.Maps.loadModule('Microsoft.Maps.Directions', { callback: directionsModuleLoaded });
-           
+
         }
 
-        function directionsModuleLoaded()
-        {
+        function directionsModuleLoaded() {
             // initialise the DirectionsManager
             var directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
 
@@ -64,14 +63,13 @@
             directionsManager.calculateDirections();
 
         }
+
         // display message if success
-        function displayMessage(e)
-        {
+        function displayMessage(e) {
             alert("Route calculation finished.");
         }
         // display message if error
-        function displayError(e)
-        {
+        function displayError(e) {
             alert(e.message);
         }
 
@@ -124,8 +122,43 @@
 
         function getCurrentLocation() {
             var geoLocationProvider = new Microsoft.Maps.GeoLocationProvider(map);
-            geoLocationProvider.getCurrentPosition({ successCallback: successCallback });
+            geoLocationProvider.getCurrentPosition(
+                {
+                    successCallback: successCallback
+                });
         }
+
+        //function getLocation() {
+        //    var geoLocationProvider = new Microsoft.Maps.GeoLocationProvider(map);
+        //    if (navigator.geolocation) {
+        //        navigator.geolocation.watchPosition(showPosition, showError);
+        //    }
+        //    else {
+        //        innerHTML = "Geolocation is not supported by this browser."
+        //    }
+        //}
+
+        //showPosition(getCurrentPosition)
+        //{
+            
+        //}
+
+        //function showError(error) {
+        //    switch (error.code) {
+        //        case error.PERMISSION_DENIED:
+        //            x.innerHTML = "User denied the request for Geolocation."
+        //            break;
+        //        case error.POSITION_UNAVAILABLE:
+        //            x.innerHTML = "Location information is unavailable."
+        //            break;
+        //        case error.TIMEOUT:
+        //            x.innerHTML = "The request to get user location timed out."
+        //            break;
+        //        case error.UNKNOWN_ERROR:
+        //            x.innerHTML = "An unknown error occurred."
+        //            break;
+        //    }
+        //}
 
         function successCallback(object) {
             alert('Success callback invoked, current map center ' + object.center);
@@ -137,8 +170,8 @@
     <p></p>
     <div id='mapDiv' style="position:relative; width:600px; height:400px;"></div>
 
-    <input id="txtStart" type="text" value="Tallaght" />
-    <input id="txtEnd" type="text" value="Clondalkin" />
+    <input id="txtStart" type="text" placeholder="Enter From Destination" required=required />
+    <input id="txtEnd" type="text" placeholder="Enter To Destination" required=required />
     <input type="button" value="Calculate Route" onclick="ClickRoute()" />
 
     <div><input type="button" value="GetCurrentLocation" onclick="getCurrentLocation();" /></div>
@@ -147,5 +180,14 @@
     <div id='output'> </div>
 
     <div id='itineraryDiv' style="position:relative; width:600px;"></div>
+
+    <select name="categories">
+        <option value="retail">Retail</option>
+        <option value="restaurants">Restaurants</option>
+        <option value="financial">Financial</option>
+        <option value="services">Services</option>
+    </select>
+    <br /><br />
+    <input type="submit" />
 </body>
 </html>
