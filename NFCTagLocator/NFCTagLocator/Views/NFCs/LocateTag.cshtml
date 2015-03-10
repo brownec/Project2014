@@ -36,6 +36,43 @@
 
             // return users current location
             geoLocationProvider.getCurrentPosition();
+
+            Microsoft.Maps.loadModule('Microsoft.Maps.Directions', { callback: directionsModuleLoaded });
+           
+        }
+
+        function directionsModuleLoaded()
+        {
+            // initialise the DirectionsManager
+            var directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+
+            // create start / end points and add them to the route
+            var startWaypoint = new Microsoft.Maps.Directions.Waypoint({ address: "Tallaght, Dublin" });
+            var endWaypoint = new Microsoft.Maps.Directions.Waypoint({ address: "Kidare, Ireland" });
+
+            directionsManager.addWaypoint(startWaypoint);
+            directionsManager.addWaypoint(endWaypoint);
+
+            // set the directions render options; specify DIV where itinerary will be displayed
+            directionsManager.setRenderOptions({ itineraryContainer: document.getElementById('itineraryDiv') });
+
+            // specify a handler for when directions requested but there is an error
+            Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', displayMessage);
+            Microsoft.Maps.Events.addHandler(directionsManager, 'directionsError', displayError);
+
+            // calculate directions and display route on map
+            directionsManager.calculateDirections();
+
+        }
+        // display message if success
+        function displayMessage(e)
+        {
+            alert("Route calculation finished.");
+        }
+        // display message if error
+        function displayError(e)
+        {
+            alert(e.message);
         }
 
         function loadTrafficModule() {
@@ -108,5 +145,7 @@
 
     <div><input type="button" value="LoadTrafficModule" onclick="loadTrafficModule();" /></div>
     <div id='output'> </div>
+
+    <div id='itineraryDiv' style="position:relative; width:600px;"></div>
 </body>
 </html>
