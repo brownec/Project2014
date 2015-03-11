@@ -4,7 +4,6 @@
     ViewBag.Title = "LocateTag";
 }
 
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
@@ -18,18 +17,24 @@
         var map = null;
 
         // Load the traffic module
-        function trafficModuleLoaded() {
+        function trafficModuleLoaded()
+        {
             alert('Traffic Module Loaded')
         }
 
         // ********************GET MAP CONFIGURATION********************
-        function GetMap() {
+        function GetMap()
+        {
             // Initialize the map
-            map = new Microsoft.Maps.Map(document.getElementById("mapDiv"), {
+            map = new Microsoft.Maps.Map(document.getElementById("mapDiv"),
+                {
                 credentials: "AlCwJKeo1G8Dd7xSR7HJPID3lLyGL0dWRzLT4w0Hy904JTfDTXzU3D6yBv7vhUWC",
                 mapTypeId: Microsoft.Maps.MapTypeId.road,
+                showBreadcrumb: true,
                 zoom: 5
-            });
+                });
+
+            map.entities.clear();
 
             // initialise the location provider
             var geoLocationProvider = new Microsoft.Maps.GeoLocationProvider(map);
@@ -37,16 +42,22 @@
             // return users current location
             geoLocationProvider.getCurrentPosition();
 
-            Microsoft.Maps.loadModule('Microsoft.Maps.Directions', { callback: directionsModuleLoaded });
-
+            // load a module method
+            Microsoft.Maps.loadModule('Microsoft.Maps.Directions',
+                {
+                    callback: directionsModuleLoaded
+                });
         }
 
-        function directionsModuleLoaded() {
+        
+        function directionsModuleLoaded()
+        {
             // initialise the DirectionsManager
             var directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+            var geoLocationProvider = new Microsoft.Maps.GeoLocationProvider(map);
 
             // create start / end points and add them to the route
-            var startWaypoint = new Microsoft.Maps.Directions.Waypoint({ address: "Tallaght, Dublin" });
+            var startWaypoint = new Microsoft.Maps.Directions.Waypoint({ address: "Cork, Ireland" });
             var endWaypoint = new Microsoft.Maps.Directions.Waypoint({ address: "Kidare, Ireland" });
 
             directionsManager.addWaypoint(startWaypoint);
@@ -61,38 +72,45 @@
 
             // calculate directions and display route on map
             directionsManager.calculateDirections();
-
         }
 
         // display message if success
-        function displayMessage(e) {
+        function displayMessage(e)
+        {
             alert("Route calculation finished.");
         }
+
         // display message if error
-        function displayError(e) {
+        function displayError(e)
+        {
             alert(e.message);
         }
 
-        function loadTrafficModule() {
+        function loadTrafficModule()
+        {
             Microsoft.Maps.loadModule('Microsoft.Maps.Traffic', { callback: trafficModuleLoaded });
         }
 
-        function ClickRoute(credentials) {
+        function ClickRoute(credentials)
+        {
             map.getCredentials(MakeRouteRequest);
         }
 
-        function MakeRouteRequest(credentials) {
+        function MakeRouteRequest(credentials)
+        {
             var routeRequest = "http://dev.virtualearth.net/REST/v1/Routes?wp.0=" + document.getElementById('txtStart').value + "&wp.1=" + document.getElementById('txtEnd').value + "&routePathOutput=Points&output=json&jsonp=RouteCallback&key=" + credentials;
 
             CallRestService(routeRequest);
         }
 
-        function RouteCallback(result) {
+        function RouteCallback(result)
+        {
             if (result &&
                   result.resourceSets &&
                   result.resourceSets.length > 0 &&
                   result.resourceSets[0].resources &&
-                  result.resourceSets[0].resources.length > 0) {
+                  result.resourceSets[0].resources.length > 0)
+            {
                 // Set the map view
                 var bbox = result.resourceSets[0].resources[0].bbox;
                 var viewBoundaries = Microsoft.Maps.LocationRect.fromLocations(new Microsoft.Maps.Location(bbox[0], bbox[1]),
@@ -103,7 +121,8 @@
                 var routeline = result.resourceSets[0].resources[0].routePath.line;
                 var routepoints = new Array();
 
-                for (var i = 0; i < routeline.coordinates.length; i++) {
+                for (var i = 0; i < routeline.coordinates.length; i++)
+                {
                     routepoints[i] = new Microsoft.Maps.Location(routeline.coordinates[i][0], routeline.coordinates[i][1]);
                 }
 
@@ -113,56 +132,30 @@
             }
         }
 
-        function CallRestService(request) {
+
+        function CallRestService(request)
+        {
             var script = document.createElement("script");
             script.setAttribute("type", "text/javascript");
             script.setAttribute("src", request);
             document.body.appendChild(script);
         }
 
-        function getCurrentLocation() {
+        function getCurrentLocation()
+        {
             var geoLocationProvider = new Microsoft.Maps.GeoLocationProvider(map);
             geoLocationProvider.getCurrentPosition(
                 {
-                    successCallback: successCallback
+                    successCallback: successCallBack
                 });
         }
-
-        //function getLocation() {
-        //    var geoLocationProvider = new Microsoft.Maps.GeoLocationProvider(map);
-        //    if (navigator.geolocation) {
-        //        navigator.geolocation.watchPosition(showPosition, showError);
-        //    }
-        //    else {
-        //        innerHTML = "Geolocation is not supported by this browser."
-        //    }
-        //}
-
-        //showPosition(getCurrentPosition)
-        //{
-            
-        //}
-
-        //function showError(error) {
-        //    switch (error.code) {
-        //        case error.PERMISSION_DENIED:
-        //            x.innerHTML = "User denied the request for Geolocation."
-        //            break;
-        //        case error.POSITION_UNAVAILABLE:
-        //            x.innerHTML = "Location information is unavailable."
-        //            break;
-        //        case error.TIMEOUT:
-        //            x.innerHTML = "The request to get user location timed out."
-        //            break;
-        //        case error.UNKNOWN_ERROR:
-        //            x.innerHTML = "An unknown error occurred."
-        //            break;
-        //    }
-        //}
-
-        function successCallback(object) {
+                
+        function successCallBack(object)
+        {
             alert('Success callback invoked, current map center ' + object.center);
         }
+
+        
     </script>
 </head>
 
@@ -180,7 +173,7 @@
     <div id='output'> </div>
 
     <div id='itineraryDiv' style="position:relative; width:600px;"></div>
-
+    <p>Please select a category from list:</p>
     <select name="categories">
         <option value="retail">Retail</option>
         <option value="restaurants">Restaurants</option>
