@@ -12,7 +12,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <h2>NFC History</h2>
+        <h2>NFC Information</h2>
         <p>Learn about how Near Field Communictaion has progressed over the past couple of years.</p>
         <script id="feed-1426097293717516" type="text/javascript" src="http://rss.bloople.net/?url=http%3A%2F%2Fwww.mobilepaymentstoday.com%2Frss%2F&limit=3&showicon=true&type=js&id=1426097293717516"></script>
         @*<p><a class="btn btn-default" href="http://www.nearfieldcommunication.org/" target="_blank">NFC History &raquo;</a></p>*@
@@ -25,11 +25,11 @@
         @*<p><a class="btn btn-default" href="http://www.nfcworld.com/" target="_blank">Latest News &raquo;</a></p>*@
     </div>
 
-    @*<div class="col-md-4">
-        <a class="twitter-timeline" href="https://twitter.com/nfcworld" data-widget-id="575734161253789697">Tweets by @@nfcworld</a>
+    @*@{var s = HttpUtility.HtmlDecode("%40nfcworld");}
+    <div class="col-md-4">
+        <a class="twitter-timeline" href="https://twitter.com/nfcworld" data-widget-id="575734161253789697">Tweets by @{var t = HttpUtility.HtmlDecode("%40nfcworld");}</a>
         <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
-
-        </div>*@
+    </div>*@
 
     <div class="col-md-4">
         <h2>NFC Technology</h2>
